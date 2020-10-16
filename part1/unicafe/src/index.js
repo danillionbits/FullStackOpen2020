@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-
 const Button = ({ onClick, text }) => (
   <button onClick={onClick}>
     {text}
@@ -10,26 +9,35 @@ const Button = ({ onClick, text }) => (
 
 const Statistics = ({ good, neutral, bad }) => {
   let total = good + neutral + bad
+  let average = (good - bad)/total
+  let positive = (good/total)*100
 
   if (total === 0) {
     return <p>No feedback given</p>
   }
 
   return (
-    <div>
-      <Statistic text="good" value={good} />
-      <Statistic text="neutral" value={neutral} />
-      <Statistic text="bad" value={bad} />
-      <Statistic text="all" value={total} />
-      <Statistic text="average" value={(good - bad)/total} />
-      <Statistic text="positive" value={(good/total)*100} />
-    </div>
+    <table>
+      <tbody>
+        <Statistic text="good" value={good} />
+        <Statistic text="neutral" value={neutral} />
+        <Statistic text="bad" value={bad} />
+        <Statistic text="all" value={total} />
+        <Statistic text="average" value={average.toFixed(1)} />
+        <Statistic text="positive" value={positive.toFixed(1) + " %"} />
+      </tbody>
+    </table>
   )
 }
 
-const Statistic = ({ text, value }) => (
-  <p>{text} {value}</p>
-)
+const Statistic = ({ text, value }) => {
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
+  )
+}
 
 const App = () => {
   // save clicks of each button to its own state
