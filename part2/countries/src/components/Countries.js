@@ -1,7 +1,7 @@
 import React from 'react'
 import Country from './Country'
 
-const Countries = ({ countries, newFilter }) => {
+const Countries = ({ countries, newFilter, handleShow }) => {
 
   const countriesShow = countries.filter(c => c.name.toLowerCase().includes(newFilter.toLowerCase()))
 
@@ -14,7 +14,12 @@ const Countries = ({ countries, newFilter }) => {
   }
 
   return (
-    countriesShow.slice(0, 10).map(c => <p>{c.name}</p>)
+    countriesShow.slice(0, 10).map(c => 
+      <div key={c.name}>
+        {c.name}
+        <button value={c.name} onClick={handleShow}>show</button>
+      </div>
+    )
   )
 }
 
