@@ -16,12 +16,18 @@ const Content = ({ parts }) => (
   )
 )
 
+const Total = ({ parts }) => (
+  <p><b>
+    total of { parts.map(part => part.exercises).reduce((a, b) => a + b) } exercises
+  </b></p>
+)
 
 const Course = ( {course} ) => {
   return (
     <div>
       <Header name={course.name} />
       <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </div>
   )
 }
