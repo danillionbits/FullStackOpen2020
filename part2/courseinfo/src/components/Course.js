@@ -22,12 +22,18 @@ const Total = ({ parts }) => (
   </b></p>
 )
 
-const Course = ( {course} ) => {
+const Course = ( {courses} ) => {
   return (
     <div>
-      <Header name={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
+      {
+        courses.map( course => (
+          <div>
+            <Header name={course.name} />
+            <Content parts={course.parts} />
+            <Total parts={course.parts} />
+          </div>
+        ))
+      }
     </div>
   )
 }
