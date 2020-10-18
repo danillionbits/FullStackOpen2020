@@ -1,4 +1,3 @@
-const { response } = require('express')
 const express = require('express')
 const app = express()
 
@@ -35,13 +34,6 @@ app.get('/info', (req, res) => {
   )
 })
 
-const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id))
-    : 0
-  return maxId + 1
-}
-
 app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
@@ -54,6 +46,27 @@ app.get('/api/persons/:id', (req, res) => {
   } else {
     res.status(404).end()
   }
+})
+
+const generateId = () => {
+  const maxId = persons.length > 0
+    ? Math.max(...persons.map(n => n.id))
+    : 0
+  return maxId + 1
+}
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body
+  console.log(body)
+  
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId()
+  }
+
+  persons = persons.concat(person)
+  res.json(person)
 })
 
 app.delete('/api/persons/:id', (req, res) => {
