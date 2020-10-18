@@ -22,10 +22,13 @@ const App = () => {
     event.preventDefault()
 
     const duplicateName = persons.find(p => p.name === newName)
+    const personObject = { name: newName, number: newNumber }
+
     if (duplicateName) {
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        updatePerson(duplicateName.id, personObject)
+      } 
     } else {
-      const personObject = { name: newName, number: newNumber }
       personService
         .create(personObject)
         .then(returnedPerson => {
@@ -35,6 +38,15 @@ const App = () => {
     }
     setNewName('')
     setNewNumber('')
+  }
+
+  const updatePerson = (id, person) => {
+    personService
+      .update(id, person)
+      .then( returnedPerson => {
+        const updatedPersons = persons.map(p => p.id !== id ? p : person);
+        setPersons(updatedPersons);
+      })
   }
 
   const removePerson = id => {
