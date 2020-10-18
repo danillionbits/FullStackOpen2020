@@ -33,7 +33,7 @@ const App = () => {
       })
       .catch(error => {
         const notification = {
-          message: error.response.data,
+          message: error.response.data.error,
           error: false
         }
         handleNoti(notification)
