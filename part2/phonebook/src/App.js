@@ -20,40 +20,44 @@ const App = () => {
       })
   }, [])
 
-  const addPerson = (event) => {
-    event.preventDefault()
-
-    const duplicateName = persons.find(p => p.name === newName)
-    const personObject = { name: newName, number: newNumber }
-    const notification = {
-      message: `Added ${newName}`,
-      error: true
-    }
-
-    if (duplicateName) {
-      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        updatePerson(duplicateName.id, personObject, notification)
-      } 
-    } else {
-      personService
-        .create(personObject)
-        .then(returnedPerson => {
-          console.log(returnedPerson)
-          setPersons(persons.concat(personObject))
-          handleNoti(notification)
-        })
-    }
-    setNewName('')
-    setNewNumber('')
+  const createPerson = (person) => {
+    personService
+      .create(person)
+      .then(returnedPerson => {
+        const notification = {
+          message: `Added ${newName}`,
+          error: true
+        }
+        setPersons(persons.concat(person))
+        handleNoti(notification)
+      })
+      .catch(error => {
+        const notification = {
+          message: error.response.data.error,
+          error: false
+        }
+        handleNoti(notification)
+      })
   }
 
-  const updatePerson = (id, person, notification) => {
+  const updatePerson = (id, person) => {
     personService
       .update(id, person)
       .then( returnedPerson => {
         const updatedPersons = persons.map(p => p.id !== id ? p : person);
+        const notification = {
+          message: `Added ${newName}`,
+          error: true
+        }
         setPersons(updatedPersons);
         handleNoti(notification)
+      })
+      .catch(error => {
+        const notification = {
+          message: `Information of ${newName} has already been removed from the server`,
+          error: false
+        }
+        handleNoti(notification);
       })
   }
 
@@ -66,6 +70,22 @@ const App = () => {
           setPersons(persons.filter(p => p.id !== person.id))
         )
     }
+  }
+
+  const handleAdd = (event) => {
+    event.preventDefault()
+
+    const duplicateName = persons.find(p => p.name === newName)
+    const person = { name: newName, number: newNumber }
+
+    if (duplicateName) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`))
+        updatePerson(duplicateName.id, person)
+    } else {
+      createPerson(person)
+    }
+    setNewName('')
+    setNewNumber('')
   }
 
   const handleNewName = (event) => setNewName(event.target.value)
@@ -91,7 +111,7 @@ const App = () => {
 
       <h2>Add a new</h2>
       <PersonForm 
-        addPerson={addPerson}
+        handleAdd={handleAdd}
         newName={newName}
         handleNewName={handleNewName}
         newNumber={newNumber}
