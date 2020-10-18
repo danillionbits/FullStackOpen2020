@@ -28,7 +28,7 @@ const App = () => {
           message: `Added ${newName}`,
           error: true
         }
-        setPersons(persons.concat(person))
+        setPersons(persons.concat(returnedPerson))
         handleNoti(notification)
       })
       .catch(error => {
@@ -44,7 +44,7 @@ const App = () => {
     personService
       .update(id, person)
       .then( returnedPerson => {
-        const updatedPersons = persons.map(p => p.id !== id ? p : person);
+        const updatedPersons = persons.map(p => p.id !== id ? p : returnedPerson);
         const notification = {
           message: `Added ${newName}`,
           error: true
