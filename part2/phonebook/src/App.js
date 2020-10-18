@@ -10,7 +10,6 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
 
-
   useEffect(() => {
     personService
       .getAll()
@@ -23,18 +22,30 @@ const App = () => {
     event.preventDefault()
 
     const duplicateName = persons.find(p => p.name === newName)
-    if(duplicateName) {
+    if (duplicateName) {
       alert(`${newName} is already added to phonebook`)
     } else {
       const personObject = { name: newName, number: newNumber }
       personService
         .create(personObject)
         .then(returnedPerson => {
+          console.log(returnedPerson)
           setPersons(persons.concat(personObject))
         })
     }
     setNewName('')
     setNewNumber('')
+  }
+
+  const removePerson = id => {
+    const person = persons.find(p => p.id === id)
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService
+        .remove(id)
+        .then(
+          setPersons(persons.filter(p => p.id !== person.id))
+        )
+    }
   }
 
   const handleNewName = (event) => setNewName(event.target.value)
@@ -60,7 +71,11 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={persons} newFilter={newFilter} />
+      <Persons 
+        persons={persons} 
+        newFilter={newFilter} 
+        removePerson={removePerson}
+      />
     </div>
   )
 }
