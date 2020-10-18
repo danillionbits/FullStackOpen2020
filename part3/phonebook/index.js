@@ -35,16 +35,16 @@ app.get('/info', (req, res) => {
   )
 })
 
-app.get('/api/persons', (req, res) => {
-  res.json(persons)
-})
-
 const generateId = () => {
   const maxId = notes.length > 0
     ? Math.max(...notes.map(n => n.id))
     : 0
   return maxId + 1
 }
+
+app.get('/api/persons', (req, res) => {
+  res.json(persons)
+})
 
 app.get('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
