@@ -84,13 +84,14 @@ app.delete('/api/persons/:id', (req, res) => {
     .catch(error => next(error))
 })
 
-//Error handling
+// Unsupported routes handling
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
 
+// Error handling
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
