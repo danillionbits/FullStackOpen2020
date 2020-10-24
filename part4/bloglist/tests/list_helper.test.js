@@ -58,36 +58,46 @@ const blogs = [
   }
 ]
 
-describe('total likes', () => {
-  const listWithOneBlog = [
-    {
-      _id: '5a422aa71b54a676234d17f8',
-      title: 'Go To Statement Considered Harmful',
-      author: 'Edsger W. Dijkstra',
-      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-      likes: 5,
-      __v: 0
-    }
-  ]
+const listWithOneBlog = [
+  {
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 5,
+    __v: 0
+  }
+]
 
-  test('when list has only one blog, equals the likes of that', () => {
+// Total likes
+describe('total likes', () => {
+  test('of list with one blog', () => {
     const result = listHelper.totalLikes(listWithOneBlog)
     expect(result).toBe(5)
   })
 
-
-  test('when list has multiple blogs, equals the likes of that', () => {
+  test('of list with multiple blogs', () => {
     const result = listHelper.totalLikes(blogs)
     expect(result).toBe(36)
   })
     
-  test('when list has zero blog, equals the likes of that', () => {
+  test('of list with zero blog', () => {
     const result = listHelper.totalLikes([])
     expect(result).toBe(0)
   })
 })
 
+// Favorite blogs
 describe('favorite blogs', () => {
+  test('of list with one blog', () => {
+    const result = listHelper.favoriteBlog(listWithOneBlog)
+    expect(result).toEqual({
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 5
+    })
+  })
+
   test('of list with multiple blogs', () => {
     const result = listHelper.favoriteBlog(blogs)
     expect(result).toEqual({
@@ -95,5 +105,34 @@ describe('favorite blogs', () => {
       author: "Edsger W. Dijkstra",
       likes: 12
     })
+  })
+    
+  test('of list with zero blog', () => {
+    const result = listHelper.favoriteBlog([])
+    expect(result).toBe(0)
+  })
+})
+
+// Most blogs
+describe('most blogs', () => {
+  test('of list with one blog', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      blogs: 1
+    })
+  })
+
+  test('of list with multiple blogs', () => {
+    const result = listHelper.mostBlogs(blogs)
+    expect(result).toEqual({
+      author: "Robert C. Martin",
+      blogs: 3
+    })
+  })
+    
+  test('of list with zero blog', () => {
+    const result = listHelper.mostBlogs([])
+    expect(result).toBe(0)
   })
 })
