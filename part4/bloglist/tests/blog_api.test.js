@@ -43,6 +43,19 @@ test('a valid blog can be added', async () => {
   expect(titles).toContain(helper.newBlog.title)
 })
 
+test('likes default to 0', async () => {
+  await api
+    .post('/api/blogs')
+    .send(helper.noLikeBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+
+  expect(blogsAtEnd[helper.initialBlogs.length].likes).toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

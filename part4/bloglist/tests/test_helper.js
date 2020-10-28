@@ -43,7 +43,13 @@ const newBlog = {
   title: "The Alchemist",
   author: "Paulo Coelho",
   url: "http://thealchemist.com/",
-  likes: 0,
+  likes: 13,
+}
+
+const noLikeBlog = {
+  title: "To Kill a Mocking Bird",
+  author: "Harper Lee",
+  url: "http://tokillamockingbird.com/",
 }
 
 const blogsInDb = async () => {
@@ -52,5 +58,8 @@ const blogsInDb = async () => {
 }
 
 module.exports = {
-  initialBlogs, newBlog, blogsInDb
+  initialBlogs, 
+  newBlog,
+  noLikeBlog, 
+  blogsInDb
 }
