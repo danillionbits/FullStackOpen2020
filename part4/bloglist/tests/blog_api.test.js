@@ -60,8 +60,6 @@ describe('when there is initially some blogs saved', () => {
     })
   })
 
-
-
   describe('addition of a new blog', () => {
     test('succeeds with valid data', async () => {
       const newBlog = {
@@ -119,7 +117,6 @@ describe('when there is initially some blogs saved', () => {
     })  
   })
   
-  
   describe('deletion of a blog', () => {
     test('succeeds with status code 204 if id is valid', async () => {
       const blogsAtStart = await helper.blogsInDb()
@@ -134,9 +131,43 @@ describe('when there is initially some blogs saved', () => {
       expect(blogsAtEnd.length).toBe(helper.initialBlogs.length - 1)
     })
   })
+
+  describe('update of a blog', () => {
+    test('succeeds with status code 204 if id is valid', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+      const blogToUpdate = blogsAtStart[0]
+  
+      await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send({ likes: 20 })
+        .expect(204)
+      
+      const blogsAtEnd = await helper.blogsInDb()
+  
+      expect(blogsAtEnd[0].likes).toBe(20)
+    })
+
+    test('fails with statuscode 404 if blog does not exist', async () => {
+      const validNonexistingId = await helper.nonExistingId()
+
+      console.log(validNonexistingId)
+
+      await api
+        .put(`/api/blogs/${validNonexistingId}`)
+        .send({ likes: 20 })
+        .expect(404)
+    })
+
+    test('fails with statuscode 400 id is invalid', async () => {
+      const invalidId = '5a3d5da59070081a82a3445'
+
+      await api
+        .put(`/api/blogs/${invalidId}`)
+        .send({ likes: 20 })
+        .expect(400)
+    })
+  })
 })
-
-
 
 afterAll(() => {
   mongoose.connection.close()
