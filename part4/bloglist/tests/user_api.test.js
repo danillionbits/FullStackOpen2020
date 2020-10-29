@@ -1,4 +1,10 @@
+const supertest = require('supertest')
+const mongoose = require('mongoose')
+const helper = require('../tests/test_helper')
+const app = require('../app')
+const api = supertest(app)
 const bcrypt = require('bcrypt')
+
 const User = require('../models/user')
 
 describe('when there is initially one user in db', () => {
@@ -23,7 +29,7 @@ describe('when there is initially one user in db', () => {
     await api
       .post('/api/users')
       .send(newUser)
-      .expect(200)
+      .expect(201)
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await helper.usersInDb()
@@ -53,4 +59,30 @@ describe('when there is initially one user in db', () => {
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length)
   })
+
+  test('password is wrong', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'root2',
+      name: 'Superuser',
+      password: 'sa',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('Password must be 3 characters long.')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+})
+
+afterAll(() => {
+  mongoose.connection.close()
 })
