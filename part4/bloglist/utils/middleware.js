@@ -10,7 +10,6 @@ const requestLogger = (req, res, next) => {
 
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get('authorization')
-  req.token = null
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     req.token = authorization.substring(7)
   }
@@ -33,7 +32,7 @@ const errorHandler = (error, req, res, next) => {
       error: error.message 
     })
   } else if (error.name === 'JsonWebTokenError') {
-    return response.status(401).json({
+    return res.status(401).json({
       error: 'invalid token'
     })
   }

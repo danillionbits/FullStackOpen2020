@@ -43,9 +43,7 @@ describe('when there is initially some blogs saved', () => {
 
     test('fails with statuscode 404 if blog does not exist', async () => {
       const validNonexistingId = await helper.nonExistingId()
-
-      console.log(validNonexistingId)
-
+      
       await api
         .get(`/api/blogs/${validNonexistingId}`)
         .expect(404)
@@ -72,6 +70,7 @@ describe('when there is initially some blogs saved', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', `bearer ${await helper.tokenExtractor()}`)
         .expect(201)
         .expect('Content-Type', /application\/json/)
     
@@ -92,6 +91,7 @@ describe('when there is initially some blogs saved', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', `bearer ${await helper.tokenExtractor()}`)
         .expect(201)
         .expect('Content-Type', /application\/json/)
     
@@ -110,28 +110,31 @@ describe('when there is initially some blogs saved', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', `bearer ${await helper.tokenExtractor()}`)
         .expect(400)
     
       const blogsAtEnd = await helper.blogsInDb()
       expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
     })  
-  })
-  
-  describe('deletion of a blog', () => {
-    test('succeeds with status code 204 if id is valid', async () => {
-      const blogsAtStart = await helper.blogsInDb()
-      const blogToDelete = blogsAtStart[0]
-  
-      await api
-        .delete(`/api/blogs/${blogToDelete.id}`)
-        .expect(204)
-      
-      const blogsAtEnd = await helper.blogsInDb()
-  
-      expect(blogsAtEnd.length).toBe(helper.initialBlogs.length - 1)
-    })
-  })
 
+    test('fails with status code 401 if token is missing', async () => {
+      const newBlog = {
+        title: "The Alchemist",
+        author: "Paulo Coelho",
+        url: "http://thealchemist.com/",
+        likes: 13,
+      }
+    
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+    
+      const blogsAtEnd = await helper.blogsInDb()
+      expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
+    }) 
+  })
+  
   describe('update of a blog', () => {
     test('succeeds with status code 204 if id is valid', async () => {
       const blogsAtStart = await helper.blogsInDb()
@@ -149,8 +152,6 @@ describe('when there is initially some blogs saved', () => {
 
     test('fails with statuscode 404 if blog does not exist', async () => {
       const validNonexistingId = await helper.nonExistingId()
-
-      console.log(validNonexistingId)
 
       await api
         .put(`/api/blogs/${validNonexistingId}`)
