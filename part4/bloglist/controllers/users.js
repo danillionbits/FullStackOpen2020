@@ -5,7 +5,7 @@ const User = require('../models/user')
 const isInvalidPassword = password => !password || password.length < 3
 
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({})
+  const users = await User.find({}).populate('blogs')
   response.json(users.map(user => user.toJSON()))
 })
 
