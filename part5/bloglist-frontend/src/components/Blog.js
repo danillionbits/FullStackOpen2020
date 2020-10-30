@@ -1,6 +1,4 @@
-import userEvent from '@testing-library/user-event'
 import React, { useState } from 'react'
-import blogService from '../services/blogs'
 
 const Blog = ({ blog, user, handleLike, handleDelete }) => {
   const [visible, setVisible] = useState(false)
