@@ -9,7 +9,7 @@ const App = () => {
   const [blogTitle, setBlogTitle] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState({message: '', error: false})
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -46,7 +46,10 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setErrorMessage({
+        message: 'Wrong credentials',
+        error: false
+      })
       setUsername('')
       setPassword('')
       setTimeout(() => {
@@ -74,10 +77,17 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(blog => {
+        setErrorMessage({
+          message: `a new blog ${blog.title} by ${blog.author} added`,
+          error: true 
+        })
         setBlogs(blogs.concat(blog))
         setBlogTitle('')
         setBlogAuthor('')
         setBlogUrl('')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
     
     console.log(`Adding blog ${blogTitle}`)
@@ -113,7 +123,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage}/>
+      <Notification {...errorMessage}/>
       {user === null ?
         loginForm() :
         <div>
