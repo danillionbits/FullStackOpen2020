@@ -4,23 +4,22 @@ import BlogForm from './BlogForm'
 import Blog from './Blog'
 import blogService from '../services/blogs'
 
-const Blogs = ({ handleNoti }) => {
+const Blogs = ({ user, handleNoti }) => {
   const [blogs, setBlogs] = useState([])
   const blogFormRef = useRef()
 
-  const sortedBlogs = [...blogs].sort((a, b) => {
-    return a.likes - b.likes
-  })
-
-  console.log(sortedBlogs)
+  const fetchBlogs = async () => {
+    const blogs = await blogService.getAll()
+    setBlogs(blogs)
+  }
 
   useEffect(() => {
-    const setInitialBlogs = async () => {
-      const initialBlogs = await blogService.getAll()
-      setBlogs(initialBlogs)
-    }
-    setInitialBlogs()
+    fetchBlogs()
   }, [])
+
+  const sortedBlogs = [...blogs].sort((a, b) => {
+    return b.likes - a.likes
+  })
 
   const addBlog = async blogObject => {
     blogFormRef.current.toggleVisibility()
@@ -31,7 +30,7 @@ const Blogs = ({ handleNoti }) => {
       error: true
     }
 
-    setBlogs(blogs.concat(blog))
+    fetchBlogs()
     handleNoti(notification)
   }
 
@@ -43,11 +42,22 @@ const Blogs = ({ handleNoti }) => {
     const updatedBlog = {
       ...blog, 
       likes: blog.likes + 1, 
-      user: blog.user ? blog.user.id : null
+      user: blog.user.id
     }
     
-    const returnedBlog = await blogService.update(id, updatedBlog)
-    setBlogs(blogs.map(blog => (blog.id !== id ? blog : returnedBlog)))
+    await blogService.update(id, updatedBlog)
+    fetchBlogs()
+  }
+
+  const handleDelete = async event => {
+    event.preventDefault()
+    const id = event.target.value
+    const blog = blogs.find(blog => blog.id === id)
+
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      await blogService.remove(id)
+      fetchBlogs()
+    }
   }
 
   return (
@@ -58,7 +68,13 @@ const Blogs = ({ handleNoti }) => {
       
       {
         sortedBlogs.map(blog =>
-          <Blog key={blog.id} blog={blog} handleLike={handleLike}/>)
+          <Blog 
+            key={blog.id} 
+            blog={blog} 
+            user={user}
+            handleLike={handleLike}
+            handleDelete={handleDelete}
+          />)
       }
     </div>
   )

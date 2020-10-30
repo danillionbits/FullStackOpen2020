@@ -61,7 +61,7 @@ const App = () => {
             `${user.username} logged in`
           }
           <button onClick={handleLogout}>logout</button>
-          <Blogs handleNoti={handleNoti}/>
+          <Blogs user={user} handleNoti={handleNoti}/>
         </div>  
       }
     </div>

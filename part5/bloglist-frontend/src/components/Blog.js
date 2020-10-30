@@ -1,7 +1,8 @@
+import userEvent from '@testing-library/user-event'
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, handleLike }) => {
+const Blog = ({ blog, user, handleLike, handleDelete }) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -17,7 +18,7 @@ const Blog = ({ blog, handleLike }) => {
       <div>
         {blog.title} {blog.author}
         <button onClick={() => setVisible(!visible)}>
-          view
+          {visible ? 'hide' : 'view'}
         </button>
         {
           visible && 
@@ -27,6 +28,12 @@ const Blog = ({ blog, handleLike }) => {
             <button value={blog.id} onClick={handleLike}>
               like
             </button>
+            <br/>
+            {blog.user.name} <br/>
+            {
+              user.name === blog.user.name &&
+              <button value={blog.id} onClick={handleDelete}>remove</button>
+            }
           </div> 
         }
       </div>
