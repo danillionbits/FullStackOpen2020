@@ -8,9 +8,6 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [blogTitle, setBlogTitle] = useState('')
-  const [blogAuthor, setBlogAuthor] = useState('')
-  const [blogUrl, setBlogUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState({message: '', error: false})
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
@@ -68,14 +65,8 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = async event => {
-    event.preventDefault()
-    const blogObject = {
-      title: blogTitle,
-      author: blogAuthor,
-      url: blogUrl
-    }
-
+  const addBlog = (blogObject) => {
+    
     blogService
       .create(blogObject)
       .then(blog => {
@@ -84,20 +75,11 @@ const App = () => {
           error: true 
         })
         setBlogs(blogs.concat(blog))
-        setBlogTitle('')
-        setBlogAuthor('')
-        setBlogUrl('')
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
       })
-    
-    console.log(`Adding blog ${blogTitle}`)
   }
-
-  const handleBlogTitle = event => setBlogTitle(event.target.value)
-  const handleBlogAuthor = event => setBlogAuthor(event.target.value)
-  const handleBlogUrl = event => setBlogUrl(event.target.value)
 
   const loginForm = () => (
     <div>
@@ -140,15 +122,7 @@ const App = () => {
           <button onClick={handleLogout}>logout</button>
           <h2>create new</h2>
           <Toggleable buttonLabel='new blog'>
-            <BlogForm 
-              addBlog={addBlog}
-              blogAuthor={blogAuthor}
-              blogTitle={blogTitle}
-              blogUrl={blogUrl}
-              handleBlogAuthor={handleBlogAuthor}
-              handleBlogTitle={handleBlogTitle}
-              handleBlogUrl={handleBlogUrl}
-            />
+            <BlogForm createBlog={addBlog}/>
           </Toggleable>
           
           {blogs.map(blog =>
