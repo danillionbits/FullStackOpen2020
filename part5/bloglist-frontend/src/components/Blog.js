@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import Toggleable from './Toggleable'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
+  const [likes, setLikes] = useState(blog.likes)
 
   const blogStyle = {
     paddingTop: 10,
@@ -10,6 +11,17 @@ const Blog = ({ blog }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
+  }
+
+  const handleLike = event => {
+    event.preventDefault()
+    const blogObject = {...blog, likes: likes + 1}
+    blogService
+      .update(blog.id, blogObject)
+      .then(updatedBlog => {
+        console.log(updatedBlog)
+        setLikes(likes+1)
+      })
   }
 
   return (
@@ -23,8 +35,12 @@ const Blog = ({ blog }) => {
           visible && 
           <div>
             {blog.url} <br/>
-            likes: {blog.likes} <br/>
-            {blog.user.username}
+            likes: {likes} 
+            <button onClick={handleLike}>
+              like
+            </button>
+            <br/>
+            {blog.user ? blog.user.username : null}
           </div> 
         }
       </div>
