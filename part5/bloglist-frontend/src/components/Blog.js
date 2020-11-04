@@ -13,7 +13,7 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
 
   return (
     <div style={blogStyle}>
-      <div>
+      <div className="blog">
         {blog.title} {blog.author}
         <button onClick={() => setVisible(!visible)}>
           {visible ? 'hide' : 'view'}
