@@ -23,7 +23,7 @@ test('renders content', () => {
   expect(component.container).not.toHaveTextContent(3)
 })  
 
-test('clicking show button', () => {
+test('clicking view button', () => {
   const user = { 
     username:"root",
     id: "5f9aaa8c4b84bb1ec0612a2c",
@@ -47,4 +47,33 @@ test('clicking show button', () => {
 
   expect(component.container).toHaveTextContent(blog.url)
   expect(component.container).toHaveTextContent(3)
+})
+
+test('clicking like button', () => {
+  const user = { 
+    username:"root",
+    id: "5f9aaa8c4b84bb1ec0612a2c",
+    name: "Superuser"
+  }
+  
+  const blog = {
+    author: "tester",
+    title: "testtitle ",
+    user: user,
+    url: "www.test.com",
+    likes: 3
+  }
+
+  const mockHandler = jest.fn().mockName("handleLike")
+
+  const component = render(
+    <Blog blog={blog} user={user} handleLike={mockHandler}/>
+  )
+
+  const button = component.getByText('view')
+  fireEvent.click(button)
+  const likeButton = component.getByText('like')
+  fireEvent.click(likeButton)
+  fireEvent.click(likeButton)
+  expect(mockHandler).toHaveBeenCalledTimes(2)
 })
