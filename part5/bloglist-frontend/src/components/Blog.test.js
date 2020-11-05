@@ -11,7 +11,7 @@ test('renders content', () => {
     user: "blog",
     url: "www.blog.com",
     likes: 3
-}
+  }
 
   const component = render(
     <Blog blog={blog} />
