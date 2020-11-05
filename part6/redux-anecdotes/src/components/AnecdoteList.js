@@ -15,13 +15,12 @@ const Anecdote = ({ anecdote, handleClick }) => (
 )
 
 
-const Anecdotes = () => {
+const AnecdoteList = () => {
   const dispatch = useDispatch()
   const anecdotes = useSelector(state => state)
 
   return (
     <div>
-      <h2>Anecdotes</h2>
       {anecdotes
         .sort((a, b) => b.votes - a.votes)
         .map(anecdote =>
@@ -38,4 +37,4 @@ const Anecdotes = () => {
   )
 }
 
-export default Anecdotes
+export default AnecdoteList
