@@ -55,13 +55,17 @@ export const initializeAnecdotes = () => {
 }
 
 export const createAnecdote = content => {
-  return {
-    type: 'NEW_ANECDOTE',
-    data: {
-      content,
-      id: getId(),
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.createNew({
+      content, 
+      id: getId(), 
       votes: 0
-    }
+    })
+    
+    dispatch({
+      type: 'NEW_ANECDOTE',
+      data: newAnecdote
+    })
   }
 }
 
