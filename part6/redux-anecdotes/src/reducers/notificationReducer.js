@@ -22,13 +22,17 @@ const clearNotification = () => {
   }
 }
 
+let token = null
+
 export const setNotification = (notification, time) => {
   return async dispatch => {
-    dispatch(addNotification(notification))
-
-    setTimeout(() => {
+    if (token !== null) clearTimeout(token)
+    token = null
+    token = setTimeout(() => {
       dispatch(clearNotification())
     }, time*1000)
+
+    dispatch(addNotification(notification))
   }
 }
 
